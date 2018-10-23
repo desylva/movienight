@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1>Movie#Show</h1>
+  <h1><%= movie.Name %></h1>
 </div>
 
 <ul class="list-unstyled list-inline">
@@ -9,17 +9,14 @@
 </ul>
 
 <p>
-  <%= movie.Name %>
-</p>
-<p>
-  <strong>Name</strong>: <%= movie.Name %>
-</p>
-<p>
-  <strong>User</strong>: <%= movie.UserUUID %>
+  <strong>Owner</strong>: <%= getUserName(movie.UserUUID) %>
 </p>
 <p>
   <strong>Imdb</strong>: 
   <%= if (movie.Imdb) { %>
-  <a href="https://www.imdb.com/title/<%= movie.Imdb %>/"><%= movie.Imdb %></a>
+  <a href="https://www.imdb.com/title/<%= movie.Imdb %>/" target="_blank"><%= movie.Imdb %></a>
   <% } %>
 </p>
+<%= if (movie.Imdb) { %>
+<img src="<%= getMovieImage(movie.Imdb) %>">
+<% } %>

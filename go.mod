@@ -20,4 +20,5 @@ require (
 	github.com/pkg/errors v0.8.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/unrolled/secure v0.0.0-20181022170031-4b6b7cf51606
+	gopkg.in/guregu/null.v3 v3.4.0
 )
