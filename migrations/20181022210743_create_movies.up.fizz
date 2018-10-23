@@ -1,0 +1,6 @@
+create_table("movies") {
+	t.Column("id", "uuid", {"primary": true})
+	t.Column("name", "string", {})
+	t.Column("user", "string", {})
+	t.Column("imdb", "string", {"null": true})
+}

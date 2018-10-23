@@ -1,0 +1,5 @@
+
+add_column("movies", "user_for", "uuid []", {"null": true})
+add_column("movies", "user_against", "uuid []", {"null": true})
+add_column("movies", "user_seen", "uuid []", {"null": true})
+add_column("users", "color", "string", {"null": true})

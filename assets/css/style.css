@@ -1,0 +1,18 @@
+
+#loading {
+    -webkit-animation: rotation 30s infinite linear;
+}
+
+@-webkit-keyframes rotation {
+    from {
+            -webkit-transform: rotate(0deg);
+    }
+    to {
+            -webkit-transform: rotate(359deg);
+    }
+}
+
+.links {
+    padding-top: 30px;
+    padding-right: 30px;
+}

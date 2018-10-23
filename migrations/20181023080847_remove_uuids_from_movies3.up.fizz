@@ -1,0 +1,3 @@
+drop_column("movies", "user_for")
+drop_column("movies", "user_against")
+drop_column("movies", "user_seen")

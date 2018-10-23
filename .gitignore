@@ -12,3 +12,4 @@ movienight
 .vscode/
 .grifter/
 .env
+.DS_Store

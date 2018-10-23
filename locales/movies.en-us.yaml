@@ -1,0 +1,6 @@
+- id: "movie.created.success"
+  translation: "Movie was successfully created."
+- id: "movie.updated.success"
+  translation: "Movie was successfully updated."
+- id: "movie.destroyed.success"
+  translation: "Movie was successfully destroyed."

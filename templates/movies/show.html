@@ -1,0 +1,25 @@
+<div class="page-header">
+  <h1>Movie#Show</h1>
+</div>
+
+<ul class="list-unstyled list-inline">
+  <li class="list-inline-item"><a href="<%= moviesPath() %>" class="btn btn-info">Back to all Movies</a></li>
+  <li class="list-inline-item"><a href="<%= editMoviePath({ movy_id: movie.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li class="list-inline-item"><a href="<%= moviePath({ movy_id: movie.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <%= movie.Name %>
+</p>
+<p>
+  <strong>Name</strong>: <%= movie.Name %>
+</p>
+<p>
+  <strong>User</strong>: <%= movie.UserUUID %>
+</p>
+<p>
+  <strong>Imdb</strong>: 
+  <%= if (movie.Imdb) { %>
+  <a href="https://www.imdb.com/title/<%= movie.Imdb %>/"><%= movie.Imdb %></a>
+  <% } %>
+</p>
