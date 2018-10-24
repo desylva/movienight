@@ -17,6 +17,47 @@
   <a href="https://www.imdb.com/title/<%= movie.Imdb %>/" target="_blank"><%= movie.Imdb %></a>
   <% } %>
 </p>
-<%= if (movie.Imdb) { %>
-<img src="<%= getMovieImage(movie.Imdb) %>">
+<%= if (ImdbData.Poster) { %>
+<img src="<%= ImdbData.Poster %>">
 <% } %>
+<%= if (ImdbData.Year) { %><p><strong>Year:</strong> <%= ImdbData.Year %></p><% } %>
+<%= if (ImdbData.Rated) { %><p><strong>Rated:</strong> <%= ImdbData.Rated %></p><% } %>
+<%= if (ImdbData.Released) { %><p><strong>Released:</strong> <%= ImdbData.Released %></p><% } %>
+<%= if (ImdbData.Runtime) { %><p><strong>Runtime:</strong> <%= ImdbData.Runtime %></p><% } %>
+<%= if (ImdbData.Genre && len(ImdbData.Genre) > 0) { %>
+  <p><strong>Genre:</strong>
+  <%= for (val) in ImdbData.Genre { %>
+    <%= val %>
+    <% } %>
+  </p>
+<% } %>
+<%= if (ImdbData.Director) { %><p><strong>Director:</strong> <%= ImdbData.Director %></p><% } %>
+<%= if (ImdbData.Writer) { %><p><strong>Writer:</strong> <%= ImdbData.Writer %></p><% } %>
+<%= if (ImdbData.Actors && len(ImdbData.Actors) > 0) { %>
+  <p><strong>Actors:</strong>
+  <%= for (val) in ImdbData.Actors { %>
+    <%= val %>
+    <% } %>
+  </p>
+<% } %>
+<%= if (ImdbData.Plot) { %><p><strong>Plot:</strong> <%= ImdbData.Plot %></p><% } %>
+<%= if (ImdbData.Production) { %><p><strong>Production:</strong> <%= ImdbData.Production %></p><% } %>
+<%= if (ImdbData.Website) { %><p><strong>Website:</strong> <a href="<%= ImdbData.Website %>" target="_blank"><%= ImdbData.Website %></a></p><% } %>
+<!-- 
+
+
+type ImdbData struct {
+	Title      string   `json:"title"`
+	Year       int      `json:"year"`
+	Rated      string   `json:"rated"`
+	Released   string   `json:"released"`
+	Runtime    string   `json:"runtime"`
+	Genre      []string `json:"genre"`
+	Director   string   `json:"director"`
+	Writer     string   `json:"writer"`
+	Actors     []string `json:"actors"`
+	Plot       string   `json:"plot"`
+	Poster     string   `json:"poster"`
+	Production string   `json:"production"`
+	Website    string   `json:"website"`
+} -->

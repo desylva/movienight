@@ -9,7 +9,6 @@
   <thead>
   <th>Movie Name</th>
     <th>Owner</th>
-    <th>Imdb</th>
     <th>&nbsp;</th>
   </thead>
   <tbody>
@@ -17,11 +16,6 @@
       <tr>
       <td><%= movie.Name %></td>
         <td><%= getUserName(movie.UserUUID) %></td>
-        <td>
-            <a href="https://www.imdb.com/title/<%= movie.Imdb %>/" target="_blank">
-              <%= movie.Imdb %>
-            </a>
-        </td>
         <td>
           <div class="pull-right">
             <a href="<%= moviePath({ movy_id: movie.ID }) %>" class="btn btn-info">View</a>

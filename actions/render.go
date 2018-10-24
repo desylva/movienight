@@ -1,18 +1,11 @@
 package actions
 
 import (
-	"encoding/json"
-	//"database/sql"
-	"fmt"
 	"github.com/desylva/movienight/models"
 	"github.com/gobuffalo/buffalo/render"
 	"github.com/gobuffalo/packr"
 	"github.com/gobuffalo/plush"
 	"github.com/gobuffalo/pop"
-	"github.com/gobuffalo/pop/nulls"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 var r *render.Engine
@@ -48,50 +41,8 @@ func init() {
 
 				return user.Name
 			},
-			"getMovieImage": func(imdb nulls.String) string {
-				//{String:tt6921996 Valid:true}
-
-				// type Strings struct {
-				// 	Imdb  string
-				// 	Valid bool
-				// }
-				// var imdb2 Strings
-				// err := json.Unmarshal(imdb, &imdb2)
-				// if err != nil {
-				// 	return fmt.Sprintf("error:", err)
-				// }
-				// return fmt.Sprintf("%+v", imdb2)
-
-				code, _ := imdb.MarshalJSON()
-				imdbString := trimQuotes(string(code))
-				s := []string{"http://www.omdbapi.com/?i=", imdbString, "&apikey=f3edf4d9"}
-				link := fmt.Sprintf(strings.Join(s, ""))
-
-				resp, err := http.Get(link)
-				if err != nil {
-					return "noimage.jpg"
-				}
-				defer resp.Body.Close()
-
-				res := MovieData{}
-				if resp.StatusCode == http.StatusOK {
-					bodyBytes, _ := ioutil.ReadAll(resp.Body)
-					json.Unmarshal(bodyBytes, &res)
-				}
-
-				return res.Poster
-			},
 		},
 	})
-}
-
-func trimQuotes(s string) string {
-	if len(s) >= 2 {
-		if s[0] == '"' && s[len(s)-1] == '"' {
-			return s[1 : len(s)-1]
-		}
-	}
-	return s
 }
 
 //{"Title":"Johnny English Strikes Again","Year":"2018","Rated":"PG",
@@ -109,14 +60,3 @@ func trimQuotes(s string) string {
 //"Metascore":"35","imdbRating":"6.6","imdbVotes":"9,960","imdbID":"tt6921996",
 //"Type":"movie","DVD":"N/A","BoxOffice":"N/A","Production":"Universal Pictures",
 //"Website":"http://www.johnnyenglishmovie.com/","Response":"True"}
-
-type MovieData struct {
-	Title    string   `json:"title"`
-	Year     int      `json:"year"`
-	Rated    string   `json:"rated"`
-	Director string   `json:"director"`
-	Actors   []string `json:"actors"`
-	Plot     string   `json:"plot"`
-	Poster   string   `json:"poster"`
-	Website  string   `json:"website"`
-}
