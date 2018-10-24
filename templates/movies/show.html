@@ -20,6 +20,7 @@
 <%= if (ImdbData.Poster) { %>
 <img src="<%= ImdbData.Poster %>">
 <% } %>
+<%= if (ImdbData.Title) { %><h2><%= ImdbData.Title %></h2><% } %>
 <%= if (ImdbData.Year) { %><p><strong>Year:</strong> <%= ImdbData.Year %></p><% } %>
 <%= if (ImdbData.Rated) { %><p><strong>Rated:</strong> <%= ImdbData.Rated %></p><% } %>
 <%= if (ImdbData.Released) { %><p><strong>Released:</strong> <%= ImdbData.Released %></p><% } %>
