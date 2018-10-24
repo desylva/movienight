@@ -32,6 +32,7 @@ type ImdbData struct {
 	Actors     string `json:"actors"`
 	Plot       string `json:"plot"`
 	Poster     string `json:"poster"`
+	ImdbID     string `json:"imdbId"`
 	Production string `json:"production"`
 	Website    string `json:"website"`
 }

@@ -212,16 +212,27 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 		userID = c.Param("user_id")
 		if len(userID) > 1 {
 			c.Session().Set("current_user_id", userID)
-		}
-		if uid := c.Session().Get("current_user_id"); uid != nil {
 			u := &models.User{}
 			tx := c.Value("tx").(*pop.Connection)
-			err := tx.Find(u, uid)
+			err := tx.Find(u, userID)
 			if err != nil {
 				c.Session().Clear()
-				return errors.WithStack(err)
+				return next(c)
+				//return errors.WithStack(err)
 			}
 			c.Set("current_user", u)
+		} else {
+			if uid := c.Session().Get("current_user_id"); uid != nil {
+				u := &models.User{}
+				tx := c.Value("tx").(*pop.Connection)
+				err := tx.Find(u, uid)
+				if err != nil {
+					c.Session().Clear()
+					return next(c)
+					//return errors.WithStack(err)
+				}
+				c.Set("current_user", u)
+			}
 		}
 		return next(c)
 	}
