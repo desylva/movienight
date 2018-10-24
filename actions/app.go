@@ -59,6 +59,14 @@ func App() *buffalo.App {
 
 		app.GET("/", HomeHandler)
 
+		// serve files from the public directory:
+		app.Use(SetCurrentUser)
+		app.Use(Authorize)
+
+		//app.Middleware.Skip(Authorize)
+
+		app.Middleware.Skip(Authorize, HomeHandler)
+
 		app.Resource("/movies", MoviesResource{})
 		app.Resource("/users", UsersResource{})
 		app.ServeFiles("/", assetsBox) // serve files from the public directory

@@ -25,22 +25,10 @@
 <%= if (ImdbData.Rated) { %><p><strong>Rated:</strong> <%= ImdbData.Rated %></p><% } %>
 <%= if (ImdbData.Released) { %><p><strong>Released:</strong> <%= ImdbData.Released %></p><% } %>
 <%= if (ImdbData.Runtime) { %><p><strong>Runtime:</strong> <%= ImdbData.Runtime %></p><% } %>
-<%= if (ImdbData.Genre && len(ImdbData.Genre) > 0) { %>
-  <p><strong>Genre:</strong>
-  <%= for (val) in ImdbData.Genre { %>
-    <%= val %>
-    <% } %>
-  </p>
-<% } %>
+<%= if (ImdbData.Genre) { %><p><strong>Genre:</strong> <%= ImdbData.Genre %></p>
 <%= if (ImdbData.Director) { %><p><strong>Director:</strong> <%= ImdbData.Director %></p><% } %>
 <%= if (ImdbData.Writer) { %><p><strong>Writer:</strong> <%= ImdbData.Writer %></p><% } %>
-<%= if (ImdbData.Actors && len(ImdbData.Actors) > 0) { %>
-  <p><strong>Actors:</strong>
-  <%= for (val) in ImdbData.Actors { %>
-    <%= val %>
-    <% } %>
-  </p>
-<% } %>
+<%= if (ImdbData.Actors && len(ImdbData.Actors) > 0) { %><p><strong>Actors:</strong> <%= ImdbData.Actors %></p>
 <%= if (ImdbData.Plot) { %><p><strong>Plot:</strong> <%= ImdbData.Plot %></p><% } %>
 <%= if (ImdbData.Production) { %><p><strong>Production:</strong> <%= ImdbData.Production %></p><% } %>
 <%= if (ImdbData.Website) { %><p><strong>Website:</strong> <a href="<%= ImdbData.Website %>" target="_blank"><%= ImdbData.Website %></a></p><% } %>

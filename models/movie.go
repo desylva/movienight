@@ -21,19 +21,19 @@ type Movie struct {
 }
 
 type ImdbData struct {
-	Title      string   `json:"title"`
-	Year       string   `json:"year"`
-	Rated      string   `json:"rated"`
-	Released   string   `json:"released"`
-	Runtime    string   `json:"runtime"`
-	Genre      []string `json:"genre"`
-	Director   string   `json:"director"`
-	Writer     string   `json:"writer"`
-	Actors     []string `json:"actors"`
-	Plot       string   `json:"plot"`
-	Poster     string   `json:"poster"`
-	Production string   `json:"production"`
-	Website    string   `json:"website"`
+	Title      string `json:"title"`
+	Year       string `json:"year"`
+	Rated      string `json:"rated"`
+	Released   string `json:"released"`
+	Runtime    string `json:"runtime"`
+	Genre      string `json:"genre"`
+	Director   string `json:"director"`
+	Writer     string `json:"writer"`
+	Actors     string `json:"actors"`
+	Plot       string `json:"plot"`
+	Poster     string `json:"poster"`
+	Production string `json:"production"`
+	Website    string `json:"website"`
 }
 
 // String is not required by pop and may be deleted
