@@ -6,3 +6,26 @@
   <%= partial("movies/form.html") %>
   <a href="<%= moviesPath() %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
 <% } %>
+
+<div id="half-the-form">
+    <h2>Search a movie:</h2>
+    <%= form({action: "/search", method: "POST", "data-remote": "true"}) { %>
+    <div class="row">
+      <div class="col-md-9">
+        <%= f.InputTag({value: title, name: "title"}) %>
+      </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+    <% } %>
+  </div>
+  
+  <div id="movieSearchResult">
+    <dl>
+      <dt>Title:</dt>
+      <dd id="searchResultTitle"></dd>
+      <dt>Year:</dt>
+      <dd id="searchResultYear"></dd>
+      <dt>Plot:</dt>
+      <dd id="searchResultPlot"></dd>
+    </dl>
+  </div>

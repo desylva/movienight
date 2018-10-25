@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 	//"database/sql"
 	// "fmt"
@@ -69,7 +70,6 @@ func (v MoviesResource) List(c buffalo.Context) error {
 
 	// Add the paginator to the context so it can be used in the template.
 	c.Set("pagination", q.Paginator)
-	c.Set("title", "")
 
 	return c.Render(200, r.Auto(c, movies))
 }
@@ -100,6 +100,7 @@ func (v MoviesResource) Show(c buffalo.Context) error {
 // New renders the form for creating a new Movie.
 // This function is mapped to the path GET /movies/new
 func (v MoviesResource) New(c buffalo.Context) error {
+	c.Set("title", "")
 	return c.Render(200, r.Auto(c, &models.Movie{}))
 }
 
@@ -118,25 +119,16 @@ func (v MoviesResource) Create(c buffalo.Context) error {
 	// Allocate an empty Movie
 	movie := &models.Movie{}
 
-	s := c.Session()
-	su := s.Get("user_id")
-	userID, ok := su.(string)
-	fmt.Println(movie)
-	if !ok {
-		return errors.New("Couldn't convert user id")
-	}
-	// newUserUUID, err := movie.UserStringToUserUUID(userID)
-	// if err != nil {
-	// 	return errors.WithStack(err)
-	// }
-	// movie.UserUUID = newUserUUID
-
 	// Bind movie to the html form elements
 	if err := c.Bind(movie); err != nil {
 		return errors.WithStack(err)
 	}
 
-	movie.UserUUID = userID
+	userId, ok := c.Session().Get("current_user_id").(string)
+	if !ok {
+		return errors.New("Couldn't convert user id")
+	}
+	movie.UserUUID = userId
 
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
@@ -266,8 +258,7 @@ func OMDBSearch(c buffalo.Context) error {
 	data := models.ImdbData{}
 
 	title := c.Request().FormValue("title")
-	//title = "Inspector"
-	log.Printf("Title: %+v", title)
+	title = url.QueryEscape(title)
 
 	s := []string{OMDB_URL, "?t=", title, "&apikey=", OMDB_API_KEY}
 	link := fmt.Sprintf(strings.Join(s, ""))
