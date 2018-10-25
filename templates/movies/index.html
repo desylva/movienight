@@ -9,6 +9,7 @@
   <thead>
   <th>Movie Name</th>
     <th>Owner</th>
+    <th>Year</th>
     <th class="middle">For</th>
     <th class="middle">Against</th>
     <th class="middle">Score</th>
@@ -24,6 +25,9 @@
             <%= for (uuid) in movie.UsersFor { %>
             <span class="badge badge-success" style="background-color: <%= getUserColor(uuid) %>"><%= getUserName(uuid) %></span>
             <% } %>
+        </td>
+        <td class="middle">
+          <%= getMovieScore(movie) %></span>
         </td>
         <td class="middle">
             <%= for (uuid) in movie.UsersAgainst { %>

@@ -35,3 +35,10 @@ i.fas {
 .middle {
     text-align: center;
 }
+
+.btn {
+    padding: .375rem .375rem !important;
+    margin: 4px !important;
+    line-height: 1.1 !important;
+    font-size: 1rem !important;
+}
