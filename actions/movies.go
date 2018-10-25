@@ -6,22 +6,16 @@ import (
 	"fmt"
 	"github.com/desylva/movienight/models"
 	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/pop/nulls"
+	//"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
-	//"database/sql"
-	// "fmt"
-	// "github.com/desylva/movienight/models"
-	// "github.com/gobuffalo/buffalo/render"
-	// "github.com/gobuffalo/packr"
-	// "github.com/gobuffalo/plush"
-	// "github.com/gobuffalo/pop"
-	"github.com/gobuffalo/envy"
-	"github.com/gobuffalo/pop/nulls"
-	"log"
 )
 
 var OMDB_API_KEY = envy.Get("OMDB_API_KEY", "nothing")
@@ -118,15 +112,14 @@ func trimQuotes(s string) string {
 func (v MoviesResource) Create(c buffalo.Context) error {
 	// Allocate an empty Movie
 	movie := &models.Movie{}
-	user := &models.User{}
+
+	// currentUser = c.Get("current_user")
+	// log.Printf("Current User ID: %v", cu)
 
 	// Bind movie to the html form elements
 	if err := c.Bind(movie); err != nil {
 		return errors.WithStack(err)
 	}
-
-	user = c.Session().Get("current_user").(*models.User)
-	movie.UserUUID = user.ID
 
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
@@ -291,7 +284,10 @@ func MoviesVote(c buffalo.Context) error {
 		vote = false
 	}
 
+	log.Printf("295")
 	usr := c.Value("current_user").(*models.User)
+	log.Printf("297")
+
 	if vote {
 		if !movie.UserIsFor(usr.ID) {
 			movie.AddUserFor(usr.ID)

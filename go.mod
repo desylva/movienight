@@ -15,6 +15,7 @@ require (
 	github.com/gobuffalo/suite v2.1.6+incompatible
 	github.com/gobuffalo/uuid v2.0.5+incompatible
 	github.com/gobuffalo/validate v2.0.3+incompatible
+	github.com/gofrs/uuid v3.1.0+incompatible
 	github.com/kr/pty v1.1.3 // indirect
 	github.com/lucasb-eyer/go-colorful v0.0.0-20180709185858-c7842319cf3a
 	github.com/markbates/grift v1.0.4

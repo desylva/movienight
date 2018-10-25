@@ -5,20 +5,10 @@
 <%= form_for(movie, {action: moviesPath(), method: "POST"}) { %>
   <%= partial("movies/form.html") %>
   <a href="<%= moviesPath() %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+  <a href='<%= searchPath({title: "title"}) %>' id="searchTitleLink" data-method="POST" data-remote="true"><span class="btn btn-primary">Search</span></a>         
 <% } %>
 
-<div id="half-the-form">
-    <h2>Search a movie:</h2>
-    <%= form({action: searchPath(), method: "POST", "data-remote": "true"}) { %>
-    <div class="row">
-      <div class="col-md-9">
-        <%= f.InputTag({value: title, name: "title"}) %>
-      </div>
-    </div>
-    <button class="btn btn-primary" type="submit">Submit</button>
-    <% } %>
-  </div>
-  
+<div class="container">
   <div id="movieSearchResult">
     <dl>
       <dt>Title:</dt>
@@ -29,3 +19,4 @@
       <dd id="searchResultPlot"></dd>
     </dl>
   </div>
+</div>
