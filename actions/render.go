@@ -59,6 +59,12 @@ func init() {
 				hex := user.Color.String
 				return hex
 			},
+			"getMovieScore": func(m models.Movie) int {
+				uf := m.UsersFor
+				ua := m.UsersAgainst
+				score := len(uf) - len(ua)
+				return score
+			},
 		},
 	})
 }

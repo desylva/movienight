@@ -15,6 +15,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"sort"
 	"strings"
 )
 
@@ -57,6 +58,8 @@ func (v MoviesResource) List(c buffalo.Context) error {
 	if err := q.All(movies); err != nil {
 		return errors.WithStack(err)
 	}
+
+	movies = orderMoviesByScore(movies)
 
 	// for _, m := range *movies {
 	// 	&m.ImdbData = getMovieData(ImdbIDString(m.Imdb))
@@ -333,4 +336,31 @@ func MoviesOMDBData(imdbID string) models.ImdbData {
 	}
 
 	return data
+}
+
+func orderMoviesByScore(ms *models.Movies) *models.Movies {
+
+	type mss struct {
+		score int
+		Value models.Movie
+	}
+
+	var msl []mss
+	for _, m := range *ms {
+		uf := m.UsersFor
+		ua := m.UsersAgainst
+		score := len(uf) - len(ua)
+		msl = append(msl, mss{score, m})
+	}
+
+	sort.Slice(msl, func(i, j int) bool {
+		return msl[i].score > msl[j].score
+	})
+
+	var nms models.Movies
+	for _, m := range msl {
+		nms = append(nms, m.Value)
+	}
+
+	return &nms
 }
