@@ -26,7 +26,15 @@ func init() {
 			// uncomment for non-Bootstrap form helpers:
 			// "form":     plush.FormHelper,
 			// "form_for": plush.FormForHelper,
-			"getUserName": func(uuid uuid.UUID, help plush.HelperContext) string {
+			"getUserName": func(uid uuid.UUID, help plush.HelperContext) string {
+				emptyUUID, err := uuid.FromString("00000000-0000-0000-0000-000000000000")
+				if err != nil {
+					return ""
+				}
+				if uid == emptyUUID {
+					return ""
+				}
+
 				// Get the DB connection from the context
 				tx, ok := help.Value("tx").(*pop.Connection)
 				if !ok {
@@ -36,13 +44,21 @@ func init() {
 				user := &models.User{}
 
 				// To find the User the parameter user_id is used.
-				if err := tx.Find(user, uuid); err != nil {
+				if err := tx.Find(user, uid); err != nil {
 					return ""
 				}
 
 				return user.Name
 			},
-			"getUserColor": func(uuid uuid.UUID, help plush.HelperContext) string {
+			"getUserColor": func(uid uuid.UUID, help plush.HelperContext) string {
+				emptyUUID, err := uuid.FromString("00000000-0000-0000-0000-000000000000")
+				if err != nil {
+					return ""
+				}
+				if uid == emptyUUID {
+					return ""
+				}
+
 				// Get the DB connection from the context
 				tx, ok := help.Value("tx").(*pop.Connection)
 				if !ok {
@@ -52,7 +68,7 @@ func init() {
 				user := &models.User{}
 
 				// To find the User the parameter user_id is used.
-				if err := tx.Find(user, uuid); err != nil {
+				if err := tx.Find(user, uid); err != nil {
 					return "#321aad"
 				}
 
