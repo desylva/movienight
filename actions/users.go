@@ -4,6 +4,7 @@ import (
 	"github.com/desylva/movienight/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/pop/nulls"
 	"github.com/pkg/errors"
 )
 
@@ -93,6 +94,9 @@ func (v UsersResource) Create(c buffalo.Context) error {
 		return errors.WithStack(errors.New("no transaction found"))
 	}
 
+	hex := models.UserColorGenerator()
+	user.Color = nulls.String{hex, true}
+
 	// Validate the data from the html form
 	verrs, err := tx.ValidateAndCreate(user)
 	if err != nil {
@@ -127,6 +131,9 @@ func (v UsersResource) Edit(c buffalo.Context) error {
 	// Allocate an empty User
 	user := &models.User{}
 
+	hex := models.UserColorGenerator()
+	user.Color = nulls.String{hex, true}
+
 	if err := tx.Find(user, c.Param("user_id")); err != nil {
 		return c.Error(404, err)
 	}
@@ -154,6 +161,9 @@ func (v UsersResource) Update(c buffalo.Context) error {
 	if err := c.Bind(user); err != nil {
 		return errors.WithStack(err)
 	}
+
+	hex := models.UserColorGenerator()
+	user.Color = nulls.String{hex, true}
 
 	verrs, err := tx.ValidateAndUpdate(user)
 	if err != nil {

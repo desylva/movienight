@@ -43,7 +43,9 @@ CREATE TABLE public.movies (
     user_uuid character varying(255) NOT NULL,
     imdb character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    users_for character varying[],
+    users_against character varying[]
 );
 
 

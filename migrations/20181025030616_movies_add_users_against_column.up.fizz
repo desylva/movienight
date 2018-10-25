@@ -1,0 +1,1 @@
+add_column("movies", "users_against", "varchar[]", {"null": true})

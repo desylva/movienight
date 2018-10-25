@@ -19,16 +19,19 @@
       <td><%= movie.Name %></td>
         <td><%= getUserName(movie.UserUUID) %></td>
         <td>
-            <span class="badge badge-primary">Olivier</span>
-            <span class="badge badge-secondary">Sonia</span>
+            <%= for (uuid) in movie.UsersFor { %>
+            <span class="badge badge-success" style="background-color: <%= getUserColor(uuid) %>"><%= getUserName(uuid) %></span>
+            <% } %>
         </td>
         <td>
-            <span class="badge badge-success">Jenna</span>
+            <%= for (uuid) in movie.UsersAgainst { %>
+            <span class="badge badge-success" style="background-color: <%= getUserColor(uuid) %>"><%= getUserName(uuid) %></span>
+            <% } %>
         </td>
         <td>
           <div class="pull-right">
-            <span class="btn btn-primary"><i class="fas fa-thumbs-up"></i></span>
-            <span class="btn btn-secondary"><i class="fas fa-thumbs-down"></i></span>
+            <a href="<%= votePath({ movy_id: movie.ID, value: true }) %>" data-method="PUT" data-remote="true"><span class="btn btn-primary"><i class="fas fa-thumbs-up"></i></span></a>
+            <a href="<%= votePath({ movy_id: movie.ID, value: false }) %>" data-method="PUT" data-remote="true"><span class="btn btn-secondary"><i class="fas fa-thumbs-down"></i></span></a>
             <a href="<%= moviePath({ movy_id: movie.ID }) %>" class="btn btn-info">View</a>
             <a href="<%= editMoviePath({ movy_id: movie.ID }) %>" class="btn btn-warning">Edit</a>
             <a href="<%= moviePath({ movy_id: movie.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>

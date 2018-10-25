@@ -9,7 +9,7 @@
 
 <div id="half-the-form">
     <h2>Search a movie:</h2>
-    <%= form({action: "/search", method: "POST", "data-remote": "true"}) { %>
+    <%= form({action: searchPath(), method: "POST", "data-remote": "true"}) { %>
     <div class="row">
       <div class="col-md-9">
         <%= f.InputTag({value: title, name: "title"}) %>

@@ -2,21 +2,24 @@ package models
 
 import (
 	"encoding/json"
-	"time"
-
 	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/pop/nulls"
 	"github.com/gobuffalo/uuid"
 	"github.com/gobuffalo/validate"
 	"github.com/gobuffalo/validate/validators"
+	"github.com/lucasb-eyer/go-colorful"
+	"math/rand"
+	"time"
 )
 
 type User struct {
-	ID        uuid.UUID `json:"id" db:"id"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
-	Name      string    `json:"name" db:"name"`
-	Email     string    `json:"email" db:"email"`
-	Active    bool      `json:"active" db:"active"`
+	ID        uuid.UUID    `json:"id" db:"id"`
+	CreatedAt time.Time    `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time    `json:"updated_at" db:"updated_at"`
+	Name      string       `json:"name" db:"name"`
+	Email     string       `json:"email" db:"email"`
+	Active    bool         `json:"active" db:"active"`
+	Color     nulls.String `json:"color" db:"color"`
 }
 
 // String is not required by pop and may be deleted
@@ -53,4 +56,11 @@ func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
 // This method is not required and may be deleted.
 func (u *User) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.NewErrors(), nil
+}
+
+// UserColorGenerator generates a random Hex color.
+func UserColorGenerator() string {
+	rand.Seed(time.Now().UTC().UnixNano())
+	c := colorful.HappyColor()
+	return c.Hex()
 }

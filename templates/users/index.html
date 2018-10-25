@@ -15,7 +15,13 @@
   <tbody>
     <%= for (user) in users { %>
       <tr>
-      <td><%= user.Name %></td>
+        <td>
+          <%= if (user.Color) { %>
+          <span class="badge badge-success" style="background-color: <%= user.Color %>"><%= user.Name %></span>
+          <% } else { %>
+          <%= user.Name %>
+          <% } %>
+        </td>
         <td><%= user.Email %></td>
         <td><%= user.Active %></td>
         <td>

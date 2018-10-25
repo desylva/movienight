@@ -57,7 +57,8 @@ func App() *buffalo.App {
 		// Setup and use translations:
 		app.Use(translations())
 
-		app.POST("/search", OMDBSearch)
+		app.POST("/search", MoviesOMDBSearch)
+		app.PUT("/vote/{movy_id}", MoviesVote)
 		app.GET("/", HomeHandler)
 
 		// serve files from the public directory:

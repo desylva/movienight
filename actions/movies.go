@@ -91,7 +91,7 @@ func (v MoviesResource) Show(c buffalo.Context) error {
 		return c.Error(404, err)
 	}
 
-	ImdbData := OMDBMovieData(ImdbIDString(movie.Imdb))
+	ImdbData := MoviesOMDBData(ImdbIDString(movie.Imdb))
 
 	c.Set("ImdbData", ImdbData)
 	return c.Render(200, r.Auto(c, movie))
@@ -118,17 +118,15 @@ func trimQuotes(s string) string {
 func (v MoviesResource) Create(c buffalo.Context) error {
 	// Allocate an empty Movie
 	movie := &models.Movie{}
+	user := &models.User{}
 
 	// Bind movie to the html form elements
 	if err := c.Bind(movie); err != nil {
 		return errors.WithStack(err)
 	}
 
-	userId, ok := c.Session().Get("current_user_id").(string)
-	if !ok {
-		return errors.New("Couldn't convert user id")
-	}
-	movie.UserUUID = userId
+	user = c.Session().Get("current_user").(*models.User)
+	movie.UserUUID = user.ID
 
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
@@ -254,7 +252,7 @@ func ImdbIDString(imdbID nulls.String) string {
 
 // OMDBSearch makes a request to OMDB and attempt to retrieve
 // a movie.
-func OMDBSearch(c buffalo.Context) error {
+func MoviesOMDBSearch(c buffalo.Context) error {
 	data := models.ImdbData{}
 
 	title := c.Request().FormValue("title")
@@ -275,12 +273,52 @@ func OMDBSearch(c buffalo.Context) error {
 		//log.Printf("%+v", data)
 	}
 	c.Set("movie", data)
-	return c.Render(200, r.JavaScript("search.js"))
+	return c.Render(200, r.JavaScript("movies/search.js"))
 }
 
-// OMDBMovieData makes a request to OMDB to retrieve the details
+func MoviesVote(c buffalo.Context) error {
+	movie := &models.Movie{}
+	tx := c.Value("tx").(*pop.Connection)
+	if err := tx.Find(movie, c.Param("movy_id")); err != nil {
+		return errors.WithStack(err)
+	}
+
+	var vote bool
+	switch value := c.Param("value"); value {
+	case "true":
+		vote = true
+	default:
+		vote = false
+	}
+
+	usr := c.Value("current_user").(*models.User)
+	if vote {
+		if !movie.UserIsFor(usr.ID) {
+			movie.AddUserFor(usr.ID)
+		} else {
+			movie.RemoveUserFor(usr.ID)
+		}
+		movie.RemoveUserAgainst(usr.ID)
+	} else {
+		if !movie.UserIsAgainst(usr.ID) {
+			movie.AddUserAgainst(usr.ID)
+		} else {
+			movie.RemoveUserAgainst(usr.ID)
+		}
+		movie.RemoveUserFor(usr.ID)
+	}
+
+	if err := tx.Update(movie); err != nil {
+		return errors.WithStack(err)
+	}
+	c.Flash().Add("success", "Preference updated successfuly.")
+
+	return c.Render(200, r.JavaScript("movies/vote.js"))
+}
+
+// MovieOMDBData makes a request to OMDB to retrieve the details
 // of a movie from its unique tt id
-func OMDBMovieData(imdbID string) models.ImdbData {
+func MoviesOMDBData(imdbID string) models.ImdbData {
 	data := models.ImdbData{}
 
 	s := []string{OMDB_URL, "?i=", imdbID, "&apikey=", OMDB_API_KEY}
@@ -300,18 +338,3 @@ func OMDBMovieData(imdbID string) models.ImdbData {
 
 	return data
 }
-
-//{"Title":"Johnny English Strikes Again","Year":"2018","Rated":"PG",
-//"Released":"26 Oct 2018","Runtime":"88 min",
-//"Genre":"Action, Adventure, Comedy",
-//"Director":"David Kerr","Writer":"William Davies (screenplay by)",
-//"Actors":"Olga Kurylenko, Rowan Atkinson, Emma Thompson, Charles Dance",
-//"Plot":"After a cyber-attack reveals the identity of all of the active undercover agents
-//in Britain, Johnny English is forced to come out of retirement to find the mastermind hacker.",
-//"Language":"English","Country":"UK, France, USA","Awards":"N/A",
-//"Poster":"https://m.media-amazon.com/images/M/MV5BMjI4MjQ3MjI5MV5BMl5BanBnXkFtZTgwNjczMDE4NTM@._V1_SX300.jpg",
-//"Ratings":[{"Source":"Internet Movie Database","Value":"6.6/10"},
-//{"Source":"Rotten Tomatoes","Value":"37%"},{"Source":"Metacritic","Value":"35/100"}],
-//"Metascore":"35","imdbRating":"6.6","imdbVotes":"9,960","imdbID":"tt6921996",
-//"Type":"movie","DVD":"N/A","BoxOffice":"N/A","Production":"Universal Pictures",
-//"Website":"http://www.johnnyenglishmovie.com/","Response":"True"}

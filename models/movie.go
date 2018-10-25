@@ -6,18 +6,21 @@ import (
 
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/pop/nulls"
+	"github.com/gobuffalo/pop/slices"
 	"github.com/gobuffalo/uuid"
 	"github.com/gobuffalo/validate"
 	"github.com/gobuffalo/validate/validators"
 )
 
 type Movie struct {
-	ID        uuid.UUID    `json:"id" db:"id"`
-	CreatedAt time.Time    `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time    `json:"updated_at" db:"updated_at"`
-	Name      string       `json:"name" db:"name"`
-	UserUUID  string       `json:"user_uuid" db:"user_uuid"`
-	Imdb      nulls.String `json:"imdb" db:"imdb"`
+	ID           uuid.UUID    `json:"id" db:"id"`
+	CreatedAt    time.Time    `json:"created_at" db:"created_at"`
+	UpdatedAt    time.Time    `json:"updated_at" db:"updated_at"`
+	Name         string       `json:"name" db:"name"`
+	UserUUID     uuid.UUID    `json:"user_uuid" db:"user_uuid"`
+	Imdb         nulls.String `json:"imdb" db:"imdb"`
+	UsersFor     slices.UUID  `json:"users_for" db:"users_for"`
+	UsersAgainst slices.UUID  `json:"users_against" db:"users_against"`
 }
 
 type ImdbData struct {
@@ -81,4 +84,76 @@ func (m *Movie) UserStringToUserUUID(uu string) (uuid.UUID, error) {
 		return u, err
 	}
 	return u, nil
+}
+
+func (m Movie) UserIsFor(id uuid.UUID) bool {
+	for _, usr := range m.UsersFor {
+		if usr == id {
+			return true
+		}
+	}
+	return false
+}
+
+func (m *Movie) AddUserFor(id uuid.UUID) {
+	set := make(map[uuid.UUID]struct{})
+	set[id] = struct{}{}
+	for _, user := range m.UsersFor {
+		set[user] = struct{}{}
+	}
+	users := make(slices.UUID, 0, len(set))
+	for user := range set {
+		users = append(users, user)
+	}
+	m.UsersFor = users
+}
+
+func (m *Movie) RemoveUserFor(id uuid.UUID) {
+	set := make(map[uuid.UUID]struct{})
+	for _, user := range m.UsersFor {
+		if user != id {
+			set[user] = struct{}{}
+		}
+	}
+	users := make(slices.UUID, 0, len(set))
+	for user := range set {
+		users = append(users, user)
+	}
+	m.UsersFor = users
+}
+
+func (m Movie) UserIsAgainst(id uuid.UUID) bool {
+	for _, usr := range m.UsersAgainst {
+		if usr == id {
+			return true
+		}
+	}
+	return false
+}
+
+func (m *Movie) AddUserAgainst(id uuid.UUID) {
+	set := make(map[uuid.UUID]struct{})
+	set[id] = struct{}{}
+	for _, user := range m.UsersAgainst {
+		set[user] = struct{}{}
+	}
+	users := make(slices.UUID, 0, len(set))
+	for user := range set {
+		users = append(users, user)
+	}
+	m.UsersAgainst = users
+}
+
+func (m *Movie) RemoveUserAgainst(id uuid.UUID) {
+	set := make(map[uuid.UUID]struct{})
+	for _, user := range m.UsersAgainst {
+		if user != id {
+			set[user] = struct{}{}
+		}
+	}
+	users := make(slices.UUID, 0, len(set))
+	for user := range set {
+		users = append(users, user)
+	}
+	m.UsersAgainst = users
 }
