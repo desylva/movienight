@@ -41,11 +41,12 @@ CREATE TABLE public.movies (
     id uuid NOT NULL,
     name character varying(255) NOT NULL,
     user_uuid character varying(255) NOT NULL,
-    imdb character varying(255),
+    imdb_id character varying(255) DEFAULT ''::character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     users_for character varying[],
-    users_against character varying[]
+    users_against character varying[],
+    score integer DEFAULT 0 NOT NULL
 );
 
 

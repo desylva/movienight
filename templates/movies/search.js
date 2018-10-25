@@ -1,5 +1,5 @@
 $( "#movie-Name" ).val("<%= movie.Title %>");
-$( "#movie-Imdb" ).val("<%= movie.ImdbID %>");
+$( "#movie-ImdbID" ).val("<%= movie.ImdbID %>");
 
 $( "#movieSearchResult" ).css("display", "block");
 $( "#searchResultTitle" ).text("<%= movie.Title %>");

@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/gobuffalo/pop"
-	"github.com/gobuffalo/pop/nulls"
 	"github.com/gobuffalo/pop/slices"
 	"github.com/gobuffalo/uuid"
 	"github.com/gobuffalo/validate"
@@ -13,16 +12,33 @@ import (
 )
 
 type Movie struct {
-	ID           uuid.UUID    `json:"id" db:"id"`
-	CreatedAt    time.Time    `json:"created_at" db:"created_at"`
-	UpdatedAt    time.Time    `json:"updated_at" db:"updated_at"`
-	Name         string       `json:"name" db:"name"`
-	UserUUID     uuid.UUID    `json:"user_uuid" db:"user_uuid"`
-	Imdb         nulls.String `json:"imdb" db:"imdb"`
-	UsersFor     slices.UUID  `json:"users_for" db:"users_for"`
-	UsersAgainst slices.UUID  `json:"users_against" db:"users_against"`
+	ID           uuid.UUID   `json:"id" db:"id"`
+	CreatedAt    time.Time   `json:"created_at" db:"created_at"`
+	UpdatedAt    time.Time   `json:"updated_at" db:"updated_at"`
+	Name         string      `json:"name" db:"name"`
+	UserUUID     uuid.UUID   `json:"user_uuid" db:"user_uuid"`
+	ImdbID       string      `json:"imdb_id" db:"imdb_id"`
+	UsersFor     slices.UUID `json:"users_for" db:"users_for"`
+	UsersAgainst slices.UUID `json:"users_against" db:"users_against"`
+	Score        int         `json:"score" db:"score"`
 }
 
+// Example of the response from a request to the OMDB API:
+//{"Title":"Johnny English Strikes Again","Year":"2018","Rated":"PG",
+//"Released":"26 Oct 2018","Runtime":"88 min",
+//"Genre":"Action, Adventure, Comedy",
+//"Director":"David Kerr","Writer":"William Davies (screenplay by)",
+//"Actors":"Olga Kurylenko, Rowan Atkinson, Emma Thompson, Charles Dance",
+//"Plot":"After a cyber-attack reveals the identity of all of the active undercover agents
+//in Britain, Johnny English is forced to come out of retirement to find the mastermind hacker.",
+//"Language":"English","Country":"UK, France, USA","Awards":"N/A",
+//"Poster":"https://m.media-amazon.com/images/M/MV5BMjI4M
+//jQ3MjI5MV5BMl5BanBnXkFtZTgwNjczMDE4NTM@._V1_SX300.jpg",
+//"Ratings":[{"Source":"Internet Movie Database","Value":"6.6/10"},
+//{"Source":"Rotten Tomatoes","Value":"37%"},{"Source":"Metacritic","Value":"35/100"}],
+//"Metascore":"35","imdbRating":"6.6","imdbVotes":"9,960","imdbID":"tt6921996",
+//"Type":"movie","DVD":"N/A","BoxOffice":"N/A","Production":"Universal Pictures",
+//"Website":"http://www.johnnyenglishmovie.com/","Response":"True"}
 type ImdbData struct {
 	Title      string `json:"title"`
 	Year       string `json:"year"`
@@ -35,7 +51,7 @@ type ImdbData struct {
 	Actors     string `json:"actors"`
 	Plot       string `json:"plot"`
 	Poster     string `json:"poster"`
-	ImdbID     string `json:"imdbId"`
+	ImdbID     string `json:"imdbID"`
 	Production string `json:"production"`
 	Website    string `json:"website"`
 }
@@ -60,6 +76,7 @@ func (m Movies) String() string {
 func (m *Movie) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		&validators.StringIsPresent{Field: m.Name, Name: "Name"},
+		&validators.StringIsPresent{Field: m.ImdbID, Name: "ImdbID"},
 		//&validators.StringIsPresent{Field: m.User, Name: "User"},
 	), nil
 }

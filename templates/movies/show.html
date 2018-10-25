@@ -13,8 +13,8 @@
 </p>
 <p>
   <strong>Imdb</strong>: 
-  <%= if (movie.Imdb) { %>
-  <a href="https://www.imdb.com/title/<%= movie.Imdb %>/" target="_blank"><%= movie.Imdb %></a>
+  <%= if (movie.ImdbID) { %>
+  <a href="https://www.imdb.com/title/<%= movie.ImdbID %>/" target="_blank"><%= movie.ImdbID %></a>
   <% } %>
 </p>
 <%= if (ImdbData.Poster) { %>

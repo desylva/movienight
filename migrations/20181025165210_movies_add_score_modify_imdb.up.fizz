@@ -1,0 +1,3 @@
+add_column("movies", "score", "int", {"default": 0})
+change_column("movies", "imdb", "string", {"default": ""})
+rename_column("movies", "imdb", "imdb_id")

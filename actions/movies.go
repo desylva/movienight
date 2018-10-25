@@ -1,21 +1,18 @@
 package actions
 
 import (
-	//"os/user"
 	"encoding/json"
 	"fmt"
 	"github.com/desylva/movienight/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/pop"
-	"github.com/gobuffalo/pop/nulls"
-	//"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
-	"sort"
+	// "sort"
 	"strings"
 )
 
@@ -52,18 +49,14 @@ func (v MoviesResource) List(c buffalo.Context) error {
 
 	// Paginate results. Params "page" and "per_page" control pagination.
 	// Default values are "page=1" and "per_page=20".
-	q := tx.PaginateFromParams(c.Params())
+	q := tx.PaginateFromParams(c.Params()).Order("score desc, name asc")
 
 	// Retrieve all Movies from the DB
 	if err := q.All(movies); err != nil {
 		return errors.WithStack(err)
 	}
 
-	movies = orderMoviesByScore(movies)
-
-	// for _, m := range *movies {
-	// 	&m.ImdbData = getMovieData(ImdbIDString(m.Imdb))
-	// }
+	//movies = orderMoviesByScore(movies)
 
 	// Add the paginator to the context so it can be used in the template.
 	c.Set("pagination", q.Paginator)
@@ -88,7 +81,7 @@ func (v MoviesResource) Show(c buffalo.Context) error {
 		return c.Error(404, err)
 	}
 
-	ImdbData := MoviesOMDBData(ImdbIDString(movie.Imdb))
+	ImdbData := MoviesOMDBData(movie.ImdbID)
 
 	c.Set("ImdbData", ImdbData)
 	return c.Render(200, r.Auto(c, movie))
@@ -129,6 +122,14 @@ func (v MoviesResource) Create(c buffalo.Context) error {
 	if !ok {
 		return errors.WithStack(errors.New("no transaction found"))
 	}
+
+	// TODO: Check IMDB ID Value has been given
+	// imdbV, _ := movie.Imdb.Value()
+	// if len(*imdbV) == 0 {
+	// 	// and redirect to the movies index page
+	// 	return c.Render(201, r.Auto(c, movie))
+	// 	c.Flash().Add("danger", "Movie IMDB ID is missing.")
+	// }
 
 	// Validate the data from the html form
 	verrs, err := tx.ValidateAndCreate(movie)
@@ -241,11 +242,6 @@ func (v MoviesResource) Destroy(c buffalo.Context) error {
 	return c.Render(200, r.Auto(c, movie))
 }
 
-func ImdbIDString(imdbID nulls.String) string {
-	imdbByte, _ := imdbID.MarshalJSON()
-	return trimQuotes(string(imdbByte))
-}
-
 // OMDBSearch makes a request to OMDB and attempt to retrieve
 // a movie.
 func MoviesOMDBSearch(c buffalo.Context) error {
@@ -273,6 +269,7 @@ func MoviesOMDBSearch(c buffalo.Context) error {
 }
 
 func MoviesVote(c buffalo.Context) error {
+
 	movie := &models.Movie{}
 	tx := c.Value("tx").(*pop.Connection)
 	if err := tx.Find(movie, c.Param("movy_id")); err != nil {
@@ -287,10 +284,9 @@ func MoviesVote(c buffalo.Context) error {
 		vote = false
 	}
 
-	log.Printf("295")
 	usr := c.Value("current_user").(*models.User)
-	log.Printf("297")
 
+	// Update who voted voted what
 	if vote {
 		if !movie.UserIsFor(usr.ID) {
 			movie.AddUserFor(usr.ID)
@@ -307,11 +303,30 @@ func MoviesVote(c buffalo.Context) error {
 		movie.RemoveUserFor(usr.ID)
 	}
 
-	if err := tx.Update(movie); err != nil {
+	// Update movie score
+	uf := movie.UsersFor
+	ua := movie.UsersAgainst
+	score := len(uf) - len(ua)
+	movie.Score = score
+
+	verrs, err := tx.ValidateAndUpdate(movie)
+	if err != nil {
 		return errors.WithStack(err)
 	}
-	c.Flash().Add("success", "Preference updated successfuly.")
 
+	if verrs.HasAny() {
+		// Make the errors available inside the html template
+		c.Set("errors", verrs)
+
+		// Render again the edit.html template that the user can
+		// correct the input.
+		return c.Render(422, r.Auto(c, movie))
+	}
+
+	c.Flash().Add("success", "Your vote was updated successfuly.")
+
+	// and redirect to the movies index page
+	// return c.Render(200, r.Auto(c, movie))
 	return c.Render(200, r.JavaScript("movies/vote.js"))
 }
 
@@ -338,29 +353,29 @@ func MoviesOMDBData(imdbID string) models.ImdbData {
 	return data
 }
 
-func orderMoviesByScore(ms *models.Movies) *models.Movies {
+// func orderMoviesByScore(ms *models.Movies) *models.Movies {
 
-	type mss struct {
-		score int
-		Value models.Movie
-	}
+// 	type mss struct {
+// 		score int
+// 		Value models.Movie
+// 	}
 
-	var msl []mss
-	for _, m := range *ms {
-		uf := m.UsersFor
-		ua := m.UsersAgainst
-		score := len(uf) - len(ua)
-		msl = append(msl, mss{score, m})
-	}
+// 	var msl []mss
+// 	for _, m := range *ms {
+// 		uf := m.UsersFor
+// 		ua := m.UsersAgainst
+// 		score := len(uf) - len(ua)
+// 		msl = append(msl, mss{score, m})
+// 	}
 
-	sort.Slice(msl, func(i, j int) bool {
-		return msl[i].score > msl[j].score
-	})
+// 	sort.Slice(msl, func(i, j int) bool {
+// 		return msl[i].score > msl[j].score
+// 	})
 
-	var nms models.Movies
-	for _, m := range msl {
-		nms = append(nms, m.Value)
-	}
+// 	var nms models.Movies
+// 	for _, m := range msl {
+// 		nms = append(nms, m.Value)
+// 	}
 
-	return &nms
-}
+// 	return &nms
+// }
