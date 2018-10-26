@@ -26,9 +26,6 @@
             <% } %>
         </td>
         <td class="middle">
-          <%= getMovieScore(movie) %></span>
-        </td>
-        <td class="middle">
             <%= for (uuid) in movie.UsersAgainst { %>
             <span class="badge badge-success" style="background-color: <%= getUserColor(uuid) %>"><%= getUserName(uuid) %></span>
             <% } %>
