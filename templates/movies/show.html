@@ -17,7 +17,7 @@
   <a href="https://www.imdb.com/title/<%= movie.ImdbID %>/" target="_blank"><%= movie.ImdbID %></a>
   <% } %>
 </p>
-<%= if (ImdbData.Poster) { %>
+<%= if (ImdbData.Poster && ImdbData.Poster != "N/A") { %>
 <img src="<%= ImdbData.Poster %>">
 <% } %>
 <%= if (ImdbData.Title) { %><h2><%= ImdbData.Title %></h2><% } %>

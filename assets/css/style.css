@@ -42,3 +42,24 @@ i.fas {
     line-height: 1.1 !important;
     font-size: 1rem !important;
 }
+
+#movieSearchResult div.containerMovie {
+    color: #495057;
+    margin: 1rem 1rem 1rem 0;
+    padding: 2rem 1rem 1rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+    width: 20rem;
+    display: inline-block;
+}
+
+.containerMovie h2 {
+    font-size: 1rem;
+}
+
+.containerMovie img {
+    display: block;
+    margin: 1rem auto;
+    width: 13rem;
+}

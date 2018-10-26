@@ -1,0 +1,17 @@
+<div id="movieSearchResult">
+<%= for (m) in search { %>
+    <div class="container containerMovie" id="movie-<%= m.ImdbID %>">
+        <%= if (len(m.Poster) > 1 && m.Poster != "N/A") { %>
+        <img src="<%= m.Poster %>">
+        <% } %>
+        <h2><%= htmlEscape(m.Title) %></h2>
+        <dl>
+            <dt>Imdb:</dt>
+            <dd><%= htmlEscape(m.ImdbID) %></dd>
+            <dt>Year:</dt>
+            <dd><%= htmlEscape(m.Year) %></dd>
+        </dl>
+        <button class="btn btn-success" id="<%= m.ImdbID %>" onclick="fillFormFields(this.id)">Select</button>
+    </div>
+<% } %>
+</div>

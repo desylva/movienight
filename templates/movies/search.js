@@ -1,7 +1,8 @@
-$( "#movie-Name" ).val("<%= movie.Title %>");
-$( "#movie-ImdbID" ).val("<%= movie.ImdbID %>");
-
+$( "#movieSearchResult" ).replaceWith('<%= partial("movies/omdb.html") %>');
 $( "#movieSearchResult" ).css("display", "block");
-$( "#searchResultTitle" ).text("<%= movie.Title %>");
-$( "#searchResultYear" ).text("<%= movie.Year %>");
-$( "#searchResultPlot" ).html("<%= movie.Plot %>").text();
+
+function fillFormFields(id) {
+    $ ( "#movie-ImdbID" ).val(id);
+    name = $( "#movie-"+id ).children('h2').text();
+    $ ( "#movie-Name" ).val(name);
+}

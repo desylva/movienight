@@ -18,7 +18,7 @@
   <tbody>
     <%= for (movie) in movies { %>
       <tr>
-      <td><%= movie.Name %></td>
+      <td><%= htmlEscape(movie.Name) %></td>
         <td><%= getUserName(movie.UserUUID) %></td>
         <td class="middle">
             <%= for (uuid) in movie.UsersFor { %>
@@ -31,7 +31,7 @@
             <% } %>
         </td>
         <td class="middle">
-          <%= getMovieScore(movie) %></span>
+          <%= movie.Score %></span>
         </td>
         <td>
           <div class="pull-right">
