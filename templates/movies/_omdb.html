@@ -2,7 +2,7 @@
 <%= if (len(search) > 1) { %>
 <%= for (m) in search { %>
     <div class="container containerMovie" id="movie-<%= m.ImdbID %>">
-        <%= if (len(m.Poster) > 1 && m.Poster != "N/A") { %>
+        <%= if (validURI(m.Poster)) { %>
         <img src="<%= m.Poster %>">
         <% } %>
         <h2><%= m.Title %></h2>

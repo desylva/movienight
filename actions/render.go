@@ -7,6 +7,7 @@ import (
 	"github.com/gobuffalo/plush"
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/uuid"
+	"net/http"
 )
 
 var r *render.Engine
@@ -80,6 +81,13 @@ func init() {
 				ua := m.UsersAgainst
 				score := len(uf) - len(ua)
 				return score
+			},
+			"validURI": func(link string) bool {
+				_, err := http.Get(link)
+				if err != nil {
+					return false
+				}
+				return true
 			},
 		},
 	})

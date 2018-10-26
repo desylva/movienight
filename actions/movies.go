@@ -9,10 +9,8 @@ import (
 	"github.com/gobuffalo/pop"
 	"github.com/pkg/errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
-	// "sort"
 	"strings"
 )
 
@@ -277,15 +275,11 @@ func MoviesOMDBSearch(c buffalo.Context) error {
 	var bodyBytes []byte
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, _ = ioutil.ReadAll(resp.Body)
-		log.Printf("%+v", string(bodyBytes))
 		err = json.Unmarshal(bodyBytes, &search)
 		if err != nil {
-			fmt.Printf("%+v\n", err)
+			return errors.WithStack(err)
 		}
 	}
-
-	fmt.Printf("%+v\n", search.Search)
-
 	c.Set("search", search.Search)
 	return c.Render(200, r.JavaScript("movies/search.js"))
 }
@@ -369,35 +363,7 @@ func MoviesOMDBData(imdbID string) models.ImdbData {
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, _ := ioutil.ReadAll(resp.Body)
 		json.Unmarshal(bodyBytes, &data)
-		log.Printf("%+v", data)
 	}
 
 	return data
 }
-
-// func orderMoviesByScore(ms *models.Movies) *models.Movies {
-
-// 	type mss struct {
-// 		score int
-// 		Value models.Movie
-// 	}
-
-// 	var msl []mss
-// 	for _, m := range *ms {
-// 		uf := m.UsersFor
-// 		ua := m.UsersAgainst
-// 		score := len(uf) - len(ua)
-// 		msl = append(msl, mss{score, m})
-// 	}
-
-// 	sort.Slice(msl, func(i, j int) bool {
-// 		return msl[i].score > msl[j].score
-// 	})
-
-// 	var nms models.Movies
-// 	for _, m := range msl {
-// 		nms = append(nms, m.Value)
-// 	}
-
-// 	return &nms
-// }
