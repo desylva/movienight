@@ -5,7 +5,7 @@
 <%= form_for(movie, {action: moviesPath(), method: "POST"}) { %>
   <%= partial("movies/form.html") %>
   <a href='<%= searchPath({title: "title"}) %>' id="searchTitleLink" data-method="POST" data-remote="true"><span class="btn btn-primary">Search</span></a>   
-  <a href="<%= moviesPath() %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>      
+  <a href="<%= moviesPath() %>" class="btn btn-warning">Cancel</a>      
 <% } %>
 
 <div class="container">
