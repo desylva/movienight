@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/desylva/movienight/models"
+	"github.com/desylva/movieparty/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/pop"
@@ -76,7 +76,7 @@ func (v MoviesResource) Show(c buffalo.Context) error {
 	movie := &models.Movie{}
 
 	// To find the Movie the parameter movie_id is used.
-	if err := tx.Find(movie, c.Param("movy_id")); err != nil {
+	if err := tx.Find(movie, c.Param("movie_id")); err != nil {
 		return c.Error(404, err)
 	}
 
@@ -164,7 +164,7 @@ func (v MoviesResource) Edit(c buffalo.Context) error {
 	// Allocate an empty Movie
 	movie := &models.Movie{}
 
-	if err := tx.Find(movie, c.Param("movy_id")); err != nil {
+	if err := tx.Find(movie, c.Param("movie_id")); err != nil {
 		return c.Error(404, err)
 	}
 
@@ -183,7 +183,7 @@ func (v MoviesResource) Update(c buffalo.Context) error {
 	// Allocate an empty Movie
 	movie := &models.Movie{}
 
-	if err := tx.Find(movie, c.Param("movy_id")); err != nil {
+	if err := tx.Find(movie, c.Param("movie_id")); err != nil {
 		return c.Error(404, err)
 	}
 
@@ -226,7 +226,7 @@ func (v MoviesResource) Destroy(c buffalo.Context) error {
 	movie := &models.Movie{}
 
 	// To find the Movie the parameter movie_id is used.
-	if err := tx.Find(movie, c.Param("movy_id")); err != nil {
+	if err := tx.Find(movie, c.Param("movie_id")); err != nil {
 		return c.Error(404, err)
 	}
 
@@ -289,7 +289,7 @@ func MoviesVote(c buffalo.Context) error {
 
 	movie := &models.Movie{}
 	tx := c.Value("tx").(*pop.Connection)
-	if err := tx.Find(movie, c.Param("movy_id")); err != nil {
+	if err := tx.Find(movie, c.Param("movie_id")); err != nil {
 		return errors.WithStack(err)
 	}
 

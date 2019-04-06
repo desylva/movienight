@@ -1,4 +1,4 @@
-module github.com/desylva/movienight
+module github.com/desylva/movieparty
 
 require (
 	github.com/codegangsta/negroni v1.0.0 // indirect
@@ -28,6 +28,7 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/unrolled/secure v0.0.0-20190103195806-76e6d4e9b90c
+	golang.org/x/crypto v0.0.0-20190313024323-a1f597ede03a
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
 	gopkg.in/guregu/null.v3 v3.4.0
 	gopkg.in/mail.v2 v2.0.0-20180731213649-a0242b2233b4 // indirect

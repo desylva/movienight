@@ -1,7 +1,7 @@
 package actions
 
 import (
-	"github.com/desylva/movienight/models"
+	"github.com/desylva/movieparty/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo-pop/pop/popmw"
 	"github.com/gobuffalo/envy"
@@ -36,7 +36,7 @@ func App() *buffalo.App {
 	if app == nil {
 		app = buffalo.New(buffalo.Options{
 			Env:         ENV,
-			SessionName: "_movienight_session",
+			SessionName: "_movieparty_session",
 		})
 
 		// Automatically redirect to SSL
@@ -57,34 +57,43 @@ func App() *buffalo.App {
 		// Setup and use translations:
 		app.Use(translations())
 
+		app.Use(SetCurrentUser)
+
 		// serve files from the public directory:
 		//app.Use(SetCurrentUser)
 		//app.Use(Authorize)
 		//app.Middleware.Skip(Authorize)
 		//app.Middleware.Skip(Authorize, HomeHandler)
 
-		auth := app.Group("/auth")
-		auth.GET("login/", AuthLogin)
-		auth.POST("new/", AuthNew)
+		// auth := app.Group("/auth")
+		// auth.GET("login/", AuthLogin)
+		// auth.POST("new/", AuthNew)
 
 		movies := app.Group("/movies")
-		movies.Use(Authorize, SetCurrentUser)
+		movies.Use(Authorize)
 		movies.Resource("/", MoviesResource{})
 
 		search := app.Group("/search")
-		search.Use(Authorize, SetCurrentUser)
+		search.Use(Authorize)
 		search.POST("/", MoviesOMDBSearch)
 
 		users := app.Group("/users")
+		users.GET("/login", UsersLoginGet)
+		users.POST("/login", UsersLoginPost)
+		users.GET("/logout", UsersLogoutGet)
+		users.GET("/recover/{id}", UsersRecoverGet)
+		users.POST("/recover/{id}", UsersRecoverPost)
+		users.GET("/reset", UsersPasswordResetGet)
+		users.POST("/reset", UsersPasswordResetPost)
 		uRes := UsersResource{}
 		ur := users.Resource("/", uRes)
-		ur.Use(Authorize, SetCurrentUser)
+		ur.Use(Authorize)
 		ur.Middleware.Skip(Authorize, uRes.New, uRes.Create)
 
 		vote := app.Group("/vote")
-		vote.Use(Authorize, SetCurrentUser)
+		vote.Use(Authorize)
 		vote.PUT("/", MoviesVote)
-		//app.PUT("/{movy_id}", MoviesVote)
+		//app.PUT("/{movie_id}", MoviesVote)
 
 		app.GET("/", HomeHandler)
 		// app.ANY("/{name:.+}", ErrorHandler)

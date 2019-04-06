@@ -2,7 +2,7 @@
   <h1>Edit Movie</h1>
 </div>
 
-<%= form_for(movie, {action: moviePath({ movy_id: movie.ID }), method: "PUT"}) { %>
+<%= form_for(movie, {action: moviePath({ movie_id: movie.ID }), method: "PUT"}) { %>
   <%= partial("movies/form.html") %>
-  <a href="<%= moviePath({ movy_id: movie.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+  <a href="<%= moviePath({ movie_id: movie.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
 <% } %>

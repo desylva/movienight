@@ -3,7 +3,7 @@ package actions
 import (
 	"net/http"
 
-	"github.com/desylva/movienight/models"
+	"github.com/desylva/movieparty/models"
 	"github.com/gobuffalo/buffalo/render"
 	"github.com/gobuffalo/packr/v2"
 	"github.com/gobuffalo/plush"

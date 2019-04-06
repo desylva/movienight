@@ -32,7 +32,11 @@
       <%= partial("flash.html") %>
       <%= yield %>
     </div>
-
+    <%= if (current_user.Name) { %>
+    <div class="container">
+      <p><a class="btn btn-danger" href="<%= usersLogoutPath() %>">Logout</a></p>
+    </div>
+    <% } %>
     <%= javascriptTag("application.js") %>
   </body>
 </html>

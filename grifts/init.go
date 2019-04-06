@@ -1,7 +1,7 @@
 package grifts
 
 import (
-	"github.com/desylva/movienight/actions"
+	"github.com/desylva/movieparty/actions"
 	"github.com/gobuffalo/buffalo"
 )
 

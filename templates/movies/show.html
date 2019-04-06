@@ -4,15 +4,15 @@
 
 <ul class="list-unstyled list-inline">
   <li class="list-inline-item"><a href="<%= moviesPath() %>" class="btn btn-info">Back to all Movies</a></li>
-  <li class="list-inline-item"><a href="<%= editMoviePath({ movy_id: movie.ID })%>" class="btn btn-warning">Edit</a></li>
-  <li class="list-inline-item"><a href="<%= moviePath({ movy_id: movie.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+  <li class="list-inline-item"><a href="<%= editMoviePath({ movie_id: movie.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li class="list-inline-item"><a href="<%= moviePath({ movie_id: movie.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
 </ul>
 
 <p>
   <strong>Owner</strong>: <%= getUserName(movie.UserUUID) %>
 </p>
 <p>
-  <strong>Imdb</strong>: 
+  <strong>Imdb</strong>:
   <%= if (movie.ImdbID) { %>
   <a href="https://www.imdb.com/title/<%= movie.ImdbID %>/" target="_blank"><%= movie.ImdbID %></a>
   <% } %>
@@ -32,7 +32,7 @@
 <%= if (ImdbData.Plot) { %><p><strong>Plot:</strong> <%= ImdbData.Plot %></p><% } %>
 <%= if (ImdbData.Production) { %><p><strong>Production:</strong> <%= ImdbData.Production %></p><% } %>
 <%= if (ImdbData.Website) { %><p><strong>Website:</strong> <a href="<%= ImdbData.Website %>" target="_blank"><%= ImdbData.Website %></a></p><% } %>
-<!-- 
+<!--
 
 
 type ImdbData struct {
