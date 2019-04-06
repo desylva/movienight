@@ -2,24 +2,28 @@ package models
 
 import (
 	"encoding/json"
+
 	"github.com/gobuffalo/pop"
-	"github.com/gobuffalo/pop/nulls"
+
+	// "github.com/gobuffalo/pop/nulls"
+	"math/rand"
+	"time"
+
 	"github.com/gobuffalo/uuid"
 	"github.com/gobuffalo/validate"
 	"github.com/gobuffalo/validate/validators"
 	"github.com/lucasb-eyer/go-colorful"
-	"math/rand"
-	"time"
 )
 
 type User struct {
-	ID        uuid.UUID    `json:"id" db:"id"`
-	CreatedAt time.Time    `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time    `json:"updated_at" db:"updated_at"`
-	Name      string       `json:"name" db:"name"`
-	Email     string       `json:"email" db:"email"`
-	Active    bool         `json:"active" db:"active"`
-	Color     nulls.String `json:"color" db:"color"`
+	ID        uuid.UUID `json:"id" db:"id"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	Name      string    `json:"name" db:"name"`
+	Email     string    `json:"email" db:"email"`
+	Active    bool      `json:"active" db:"active"`
+	Color     string    `json:"color" db:"color"`
+	Password  string    `json:"-" db:"color"`
 }
 
 // String is not required by pop and may be deleted

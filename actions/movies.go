@@ -3,15 +3,16 @@ package actions
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"strings"
+
 	"github.com/desylva/movienight/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/pop"
 	"github.com/pkg/errors"
-	"io/ioutil"
-	"net/http"
-	"net/url"
-	"strings"
 )
 
 var OMDB_API_KEY = envy.Get("OMDB_API_KEY", "nothing")

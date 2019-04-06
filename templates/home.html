@@ -1,13 +1,22 @@
-<h1>Movie Party</h1>
-<%= if (current_user.Name) { %>
-<h2>Welcome back <%= current_user.Name %></h2>
-<div class="links">
-    <p>Insert disk to play:</p>
-    <a href="<%= moviesPath() %>">
-        <img id="loading" src="/assets/images/dvd_300x300.png" width="300px" height="300px">
-    </a>
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <div class="page-header">
+            <h1>Movie Party</h1>
+        </div>
+        <%= if (current_user.Name) { %>
+        <h2>Welcome back <%= current_user.Name %></h2>
+        <div class="links">
+            <p>Insert disk to play:</p>
+            <a href="<%= moviesPath() %>">
+                <img id="loading" src="/assets/images/dvd_300x300.png" width="300px" height="300px">
+            </a>
+        </div>
+        <% } else { %>
+        <p>Sorry, who are you?</p>
+        <img src="/assets/images/clipart-spy-7.png" width="300px" height="300px">
+        <p><a href="<%= authLoginPath() %>">Login</a> or <a href="<%= newUsersPath() %>">create a new account</a>.
+        <% } %>
+    </div>
+    <div class="col-sm-3"></div>
 </div>
-<% } else { %>
-<p>Sorry, who are you?</p>
-<img src="/assets/images/clipart-spy-7.png" width="300px" height="300px">
-<% } %>

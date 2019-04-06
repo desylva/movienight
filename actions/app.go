@@ -9,7 +9,7 @@ import (
 	forcessl "github.com/gobuffalo/mw-forcessl"
 	i18n "github.com/gobuffalo/mw-i18n"
 	paramlogger "github.com/gobuffalo/mw-paramlogger"
-	"github.com/gobuffalo/packr"
+	"github.com/gobuffalo/packr/v2"
 	"github.com/unrolled/secure"
 )
 
@@ -57,21 +57,37 @@ func App() *buffalo.App {
 		// Setup and use translations:
 		app.Use(translations())
 
-		app.POST("/search", MoviesOMDBSearch)
-		//app.PUT("/vote/{movy_id}", MoviesVote)
-		app.PUT("/vote", MoviesVote)
-		app.GET("/", HomeHandler)
-
 		// serve files from the public directory:
-		app.Use(SetCurrentUser)
-		app.Use(Authorize)
-
+		//app.Use(SetCurrentUser)
+		//app.Use(Authorize)
 		//app.Middleware.Skip(Authorize)
+		//app.Middleware.Skip(Authorize, HomeHandler)
 
-		app.Middleware.Skip(Authorize, HomeHandler)
+		auth := app.Group("/auth")
+		auth.GET("login/", AuthLogin)
+		auth.POST("new/", AuthNew)
 
-		app.Resource("/movies", MoviesResource{})
-		app.Resource("/users", UsersResource{})
+		movies := app.Group("/movies")
+		movies.Use(Authorize, SetCurrentUser)
+		movies.Resource("/", MoviesResource{})
+
+		search := app.Group("/search")
+		search.Use(Authorize, SetCurrentUser)
+		search.POST("/", MoviesOMDBSearch)
+
+		users := app.Group("/users")
+		uRes := UsersResource{}
+		ur := users.Resource("/", uRes)
+		ur.Use(Authorize, SetCurrentUser)
+		ur.Middleware.Skip(Authorize, uRes.New, uRes.Create)
+
+		vote := app.Group("/vote")
+		vote.Use(Authorize, SetCurrentUser)
+		vote.PUT("/", MoviesVote)
+		//app.PUT("/{movy_id}", MoviesVote)
+
+		app.GET("/", HomeHandler)
+		// app.ANY("/{name:.+}", ErrorHandler)
 		app.ServeFiles("/", assetsBox) // serve files from the public directory
 	}
 
@@ -84,7 +100,7 @@ func App() *buffalo.App {
 // for more information: https://gobuffalo.io/en/docs/localization
 func translations() buffalo.MiddlewareFunc {
 	var err error
-	if T, err = i18n.New(packr.NewBox("../locales"), "en-US"); err != nil {
+	if T, err = i18n.New(packr.New("../locales", "../locales"), "en-US"); err != nil {
 		app.Stop(err)
 	}
 	return T.Middleware()
