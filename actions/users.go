@@ -48,7 +48,7 @@ func UsersLoginPost(c buffalo.Context) error {
 	u, err := user.GetByEmail(c, string(userForm.Email))
 	if err != nil {
 		c.Flash().Add("danger", "Invalid user")
-		return c.Redirect(307, "rootPath()")
+		return c.Render(200, r.HTML("users/login.html"))
 	}
 
 	ok := models.ComparePassword(u.PasswordHash, string(userForm.Password))
@@ -160,7 +160,7 @@ func (v UsersResource) List(c buffalo.Context) error {
 		return errors.WithStack(errors.New("no transaction found"))
 	}
 
-	users := models.Users{}
+	users := &models.Users{}
 
 	// Paginate results. Params "page" and "per_page" control pagination.
 	// Default values are "page=1" and "per_page=20".
@@ -232,6 +232,14 @@ func (v UsersResource) Create(c buffalo.Context) error {
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
 		return errors.WithStack(errors.New("no transaction found"))
+	}
+
+	// Check the user is not yet in use
+	userCheck := models.User{}
+	_, err := userCheck.GetByEmail(c, user.Email)
+	if err == nil {
+		c.Flash().Add("danger", "Email is already in use")
+		return c.Render(422, r.Auto(c, &models.User{}))
 	}
 
 	hex := models.UserColorGenerator()
@@ -366,26 +374,12 @@ func (v UsersResource) Destroy(c buffalo.Context) error {
 // in the session. If one is found it is set on the context.
 func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 	return func(c buffalo.Context) error {
-		var userID string
-		userID = c.Param("user_id")
 		u := &models.User{}
-		if len(userID) > 1 {
-			c.Session().Set("current_user_id", userID)
+		if uid := c.Session().Get("current_user_id"); uid != nil {
 			tx := c.Value("tx").(*pop.Connection)
-			err := tx.Find(u, userID)
+			err := tx.Find(u, uid)
 			if err != nil {
 				c.Session().Clear()
-				return errors.WithStack(err)
-			}
-		} else {
-			log.Print("userID: %v", userID)
-			if uid := c.Session().Get("current_user_id"); uid != nil {
-				tx := c.Value("tx").(*pop.Connection)
-				err := tx.Find(u, uid)
-				if err != nil {
-					c.Session().Clear()
-					return errors.WithStack(err)
-				}
 			}
 		}
 		c.Set("current_user", u)
