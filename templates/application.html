@@ -33,8 +33,11 @@
       <%= yield %>
     </div>
     <%= if (current_user.Name) { %>
-    <div class="container">
-      <p><a class="btn btn-danger" href="<%= usersLogoutPath() %>">Logout</a></p>
+    <div class="row">
+      <div class="col-sm-9"></div>
+      <div class="col-sm-3">
+        <p><a class="btn btn-danger" href="<%= usersLogoutPath() %>">Logout</a></p>
+      </div>
     </div>
     <% } %>
     <%= javascriptTag("application.js") %>
