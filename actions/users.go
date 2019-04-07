@@ -48,17 +48,17 @@ func UsersLoginPost(c buffalo.Context) error {
 	u, err := user.GetByEmail(c, string(userForm.Email))
 	if err != nil {
 		c.Flash().Add("danger", "Invalid user")
-		return c.Render(200, r.HTML("users/login.html"))
+		return c.Render(401, r.HTML("users/login.html"))
 	}
 
 	ok := models.ComparePassword(u.PasswordHash, string(userForm.Password))
 	if !ok {
 		c.Flash().Add("danger", "Invalid password")
-		return c.Redirect(307, "rootPath()")
+		return c.Render(401, r.HTML("users/login.html"))
 	}
 
 	c.Session().Set("current_user_id", u.ID.String())
-	return c.Redirect(307, "rootPath()")
+	return c.Redirect(302, "/movies/")
 }
 
 // UsersPasswordResetGet renders a password recovery form
